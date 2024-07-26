@@ -1,3 +1,15 @@
+UNAME := $(shell uname)
+
+
+# Define the assembly file based on the operating system
+ifeq ($(UNAME), Linux)
+    ASM_FILE = linux64.s
+else ifeq ($(UNAME), FreeBSD)
+    ASM_FILE = bsd.s
+else
+    $(error Unsupported operating system)
+endif
+
 
 all: rest libc.o asm.o
 	ld *.o -o http
