@@ -11,4 +11,5 @@ asm.o:
 	nasm -f elf64 linux64.s
 
 clean:
-	rm *.o http
+	rm *.o
+	rm http

@@ -3,7 +3,6 @@
 #include "net.h"
 
 min_addr_t ngethostbyname(unsigned char * hostname , unsigned char * server);
-dword my_inet_addr(const char *cp);
 
 
 

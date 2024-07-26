@@ -16,6 +16,4 @@
 
 word my_htons(word hostshort);
 
-
-
 #endif
