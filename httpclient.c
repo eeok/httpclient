@@ -2,7 +2,7 @@
 #include "resolver.h"
 
 //TODO: comprendre les IP!!!
-//TODO: BIG endian
+//TODO: BIG endianj
 int ismain(int argc, char const *argv[])
 {
   unsigned char hostname[100];
