@@ -50,30 +50,6 @@ sysread:
     ret
 
 
-section .text
-    global sysopen
-sysopen:
-    ; Arguments:
-    ; rdi: pointer to filename
-    ; rsi: flags
-    ; rdx: mode
-    mov eax, 5
-    syscall
-
-    ret
-
-section .text
-    global mkdr
-mkdr:
-    ; Arguments:
-    ; rdi: pointer to dirname
-    ; rsi: mode
-
-    mov eax, 136 
-    syscall
-
-    ret
-
 ;---
 section .text
     global sysclose
@@ -84,50 +60,22 @@ sysclose:
 
 ;---
 section .text
-    global seek
-seek:
-    mov eax, 478
-    syscall 
+    global sock
+sock:
+mov eax, 97
+    syscall
     ret
-
 ;---
 section .text
-    global w8
-w8:
-    mov eax, 7
+    global sysconnect
+sysconnect:
+    mov eax, 98
     syscall
     ret
 
-;---
 section .text
-    global sysfork
-sysfork:
-    mov eax, 2
+    global sysgetpid
+sysgetpid:
+    mov eax, 20
     syscall
     ret
-
-;---
-section .text
-    global exec
-exec:
-    mov eax, 59
-    syscall
-    ret
-
-;---
-section .text
-    global dread
-dread:
-    mov eax, 217
-    syscall
-    ret
-
-
-;---
-section .text
-    global unlink
-unlink:
-    mov eax, 10
-    syscall
-    ret
-
