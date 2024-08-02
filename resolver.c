@@ -165,6 +165,10 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
   struct DNS_HEADER *dns = 0;
   struct QUESTION *qinfo = 0;
 
+  #ifdef __FreeBSD__
+  struct msg msg;
+  struct iov iov[1];
+  #endif
 
   s = sock(mAF_INET , mSOCK_DGRAM , 0); //UDP packet for DNS queries
 
@@ -200,8 +204,9 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
   qinfo->qtype = my_htons( T_A ); // sending query of A record type
   qinfo->qclass = my_htons(1); //its internet
 
+#ifdef __linux__
     // Connect to the DNS server
-    if (sysconnect(s, &dest, sizeof(dest)) < 0) {
+    if (sysconnect(s, &dest, sizeof(dest))) {
         syswrite(1, "Connect failed\n", 15);
         return  -1;
     }
@@ -214,6 +219,46 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
         syswrite(1, "Read failed\n", 12);
         return -1;
     }
+#else
+
+  // Prepare the message header for sending
+    iov[0].base = buf;
+    iov[0].len = sizeof(struct DNS_HEADER) + (len((const char*)qname) + 1) + sizeof(struct QUESTION);
+    msg.msgname = 0;
+    msg.msglen = 0;
+    msg.iov = iov;
+    msg.iovlen = 1;
+    msg.msgcontrol = 0;
+    msg.ctrllen = 0;
+    msg.flags = 0;
+
+    // Send DNS query
+    if (snd(s, &msg, 0) < 0) {
+        sysclose(s);
+        return -1;
+    }
+  
+
+
+    // Prepare the message header for receiving
+    iov[0].base = buf;
+    iov[0].len = BUF_SIZE;
+    msg.msgname = 0;
+    msg.msglen = 0;
+    msg.iov = iov;
+    msg.iovlen = 1;
+    msg.msgcontrol = 0;
+    msg.ctrllen = 0;
+    msg.flags = 0;
+
+    // Receive DNS response
+    long n = rcv(s, &msg, 0);
+    if (n < 0) {
+        sysclose(s);
+        return -1;
+    }
+
+#endif
 
   //move ahead of the dns header and the query field
   unsigned char cool[256];

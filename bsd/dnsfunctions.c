@@ -32,9 +32,9 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
   struct msockaddr_in a;
   struct RES_RECORD answers; //the replies from the DNS server
   struct msockaddr_in dest;
-  int n;
   struct DNS_HEADER *dns = 0;
   struct QUESTION *qinfo = 0;
+
   struct msg msg;
   struct iov iov[1];
 
@@ -110,7 +110,7 @@ int bob;
     msg.flags = 0;
 
     // Receive DNS response
-    n = rcv(s, &msg, 0);
+    long n = rcv(s, &msg, 0);
     if (n < 0) {
         sysclose(s);
         return -1;

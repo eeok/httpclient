@@ -1,7 +1,7 @@
 #ifndef NET_H
 #define NET_H
 
-#include "stdlib.h"
+#include "lib.h"
 
 
 #define SOCK_STREAM 1

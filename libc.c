@@ -1,4 +1,4 @@
-#include "stdlib.h"
+#include "lib.h"
 
 #define BUFFER_SIZE 1024
 dword len(const char *str) {
@@ -27,4 +27,8 @@ void copy(void *restrict dst, const void *restrict sc, long len) {
     while(len--) {
 	    *dest++ = *src++;
     }
+}
+
+void memset() {
+
 }

@@ -18,7 +18,7 @@ libc.o:
 	gcc libc.c resolver.c -c -O1 -fno-stack-protector -march=native
 
 asm.o:
-	nasm -f elf64 linux64.s
+	nasm -f elf64 $(ASM_FILE)
 
 clean:
 	rm *.o

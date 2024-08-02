@@ -35,6 +35,8 @@ struct msockaddr
   };
 #define SOCKADDR_COMMON_SIZE	(sizeof (unsigned short int))
 
+
+#ifdef __linux__
 /* Structure describing an Internet socket address.  */
 struct msockaddr_in
   {
@@ -49,9 +51,32 @@ struct msockaddr_in
 			   - sizeof (struct min_addr)];
   };
 
+#else
+struct msockaddr_in {
+  byte sin_len;
+  byte sin_family;
+  word sin_port;
+  struct min_addr sin_addr;
+  char sin_zero[8];
+};
+#endif
+
 int sysconnect(int sockfd, const struct msockaddr_in *addr, dword addrlen);
 
 void copy(void * dst, const void * sc, long len);
 dword len(const char *str);
+struct iov {
+ void *base;
+ unsigned long len;
+};
 
+struct msg {
+	void *msgname;
+	unsigned int msglen;
+	struct iov *iov;
+	unsigned int iovlen;
+	void *msgcontrol;
+	unsigned int ctrllen;
+	int flags;
+};
 #endif
