@@ -27,7 +27,6 @@ int ismain(int argc, char const *argv[])
     .sin_addr.s_addr = addr
   };
 #endif
-syswrite(1, "ok\n", 3);
   if (sysconnect(sockfd, &sockadd, sizeof(sockadd))) {
       syswrite(1,"Connection failed\n", 18);
       return 1;
