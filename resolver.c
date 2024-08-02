@@ -206,13 +206,14 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
   qinfo->qtype = my_htons( T_A ); // sending query of A record type
   qinfo->qclass = my_htons(1); //its internet
 
-#ifdef __linux__
     // Connect to the DNS server
     if (sysconnect(s, &dest, sizeof(dest))) {
         syswrite(1, "Connect failed\n", 15);
         return  -1;
     }
-       // Send DNS query
+    
+#ifdef __linux__
+    // Send DNS query
     syswrite(s, buf, sizeof(struct DNS_HEADER) + (len((const char*)qname) + 1) + sizeof(struct QUESTION));
 
        // Receive DNS response
@@ -222,7 +223,6 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
         return -1;
     }
 #else
-  syswrite(1, "bsd\n", 4);
   // Prepare the message header for sending
     iov[0].base = buf;
     iov[0].len = sizeof(struct DNS_HEADER) + (len((const char*)qname) + 1) + sizeof(struct QUESTION);
@@ -252,7 +252,6 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
     msg.msgcontrol = 0;
     msg.ctrllen = 0;
     msg.flags = 0;
-
     // Receive DNS response
     long n = rcv(s, &msg, 0);
     if (n < 0) {
