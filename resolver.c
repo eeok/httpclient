@@ -298,6 +298,7 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
       syswrite(1, custom_inet_ntoa(a.sin_addr), len(custom_inet_ntoa(a.sin_addr)));
       syswrite(1, "\n", 1);
     }
+    syswrite(1, "???\n", 4);
     sysclose(s);
     return a.sin_addr.s_addr;
 }

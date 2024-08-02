@@ -1,8 +1,6 @@
 #include "net.h"
 #include "resolver.h"
 
-//TODO: comprendre les IP!!!
-//TODO: BIG endianj
 int ismain(int argc, char const *argv[])
 {
   unsigned char hostname[100];
@@ -14,13 +12,23 @@ int ismain(int argc, char const *argv[])
   min_addr_t addr = ngethostbyname(hostname,"1.1.1.1");
 
   int sockfd = sock(mAF_INET, SOCK_STREAM, 0);
+
+#ifdef __linux__
   struct msockaddr_in sockadd = {
     .sin_family = mAF_INET,
     .sin_port = my_htons(80),
     .sin_addr.s_addr = addr
   };
-
-  if (sysconnect(sockfd, &sockadd, sizeof(sockadd)) < 0) {
+#else
+  struct msockaddr_in sockadd = {
+    .sin_len = sizeof(struct msockaddr_in),
+    .sin_family = mAF_INET,
+    .sin_port = my_htons(80),
+    .sin_addr.s_addr = addr
+  };
+#endif
+syswrite(1, "ok\n", 3);
+  if (sysconnect(sockfd, &sockadd, sizeof(sockadd))) {
       syswrite(1,"Connection failed\n", 18);
       return 1;
   }
