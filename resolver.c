@@ -222,7 +222,7 @@ min_addr_t ngethostbyname(unsigned char *host,unsigned char *dns_server) {
         return -1;
     }
 #else
-
+  syswrite(1, "bsd\n", 4);
   // Prepare the message header for sending
     iov[0].base = buf;
     iov[0].len = sizeof(struct DNS_HEADER) + (len((const char*)qname) + 1) + sizeof(struct QUESTION);
