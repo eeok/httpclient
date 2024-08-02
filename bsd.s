@@ -79,3 +79,18 @@ sysgetpid:
     mov eax, 20
     syscall
     ret
+
+
+section .text
+    global snd
+snd:
+    mov eax, 28 
+    syscall
+    ret
+
+section .text
+    global rcv 
+rcv:
+    mov eax, 27
+    syscall
+    ret

@@ -1,5 +1,7 @@
 #include "resolver.h"
 
+#define BUF_SIZE 4096
+
 // Custom ntohs implementation
 word custom_ntohs(word netshort) {
     return (netshort >> 8) | (netshort << 8);
