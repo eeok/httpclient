@@ -7,30 +7,35 @@ int ismain(int argc, char const *argv[])
   if(argc <  2) {
     return 1;
   }
-  int pipi= len(argv[1]);
-  copy(hostname,argv[1],pipi);
+  int lenhost= len(argv[1]);
+  copy(hostname,argv[1], lenhost);
   min_addr_t addr = ngethostbyname(hostname,"1.1.1.1");
 
-  int sockfd = sock(mAF_INET, SOCK_STREAM, 0);
 
 #ifdef __linux__
+  int sockfd = sock(mAF_INET, SOCK_STREAM, 0);
   struct msockaddr_in sockadd = {
     .sin_family = mAF_INET,
     .sin_port = my_htons(80),
     .sin_addr.s_addr = addr
   };
+  if (sysconnect(sockfd, &sockadd, sizeof(sockadd)) < 0) {
+      syswrite(1,"Connection failed\n", 18);
+      return 1;
+  }
 #else
+  int sockfd = sock(mAF_INET, SOCK_STREAM, 0);
   struct msockaddr_in sockadd = {
     .sin_len = sizeof(struct msockaddr_in),
     .sin_family = mAF_INET,
     .sin_port = my_htons(80),
     .sin_addr.s_addr = addr
   };
-#endif
   if (sysconnect(sockfd, &sockadd, sizeof(sockadd))) {
       syswrite(1,"Connection failed\n", 18);
       return 1;
   }
+#endif
     
   char message[200] = "GET / HTTP/1.1\r\nHost: ";//Connection: close\r\n\r\n";
   int curlen = len(message);
@@ -43,7 +48,6 @@ int ismain(int argc, char const *argv[])
   syswrite(sockfd, message, curlen+lh+lc);
   syswrite(1, message, curlen+lh+lc);
   char buffer[4096];
-
   while (1) {
     long bytes_received = sysread(sockfd, buffer, sizeof(buffer) - 1);
     if (bytes_received <= 0) {
